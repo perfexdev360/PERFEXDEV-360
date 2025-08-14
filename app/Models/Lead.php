@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Lead extends Model
 {
     /**
+     * The attributes that aren't mass assignable.
+     */
+    protected $guarded = [];
      * The attributes that are mass assignable.
      */
     protected $fillable = [
