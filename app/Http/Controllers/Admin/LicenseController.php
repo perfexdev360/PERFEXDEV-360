@@ -3,64 +3,52 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\LicenseRequest;
 use App\Models\License;
-use Illuminate\Http\Request;
+use App\Repositories\LicenseRepository;
 
 class LicenseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(protected LicenseRepository $repository)
+    {
+        $this->authorizeResource(License::class, 'license');
+    }
+
     public function index()
     {
-        //
+        return response()->json($this->repository->all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return response()->json([]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(LicenseRequest $request)
     {
-        //
+        $license = $this->repository->create($request->validated());
+        return response()->json($license, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(License $license)
     {
-        //
+        return response()->json($this->repository->find($license));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(License $license)
     {
-        //
+        return response()->json($this->repository->find($license));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, License $license)
+    public function update(LicenseRequest $request, License $license)
     {
-        //
+        $license = $this->repository->update($license, $request->validated());
+        return response()->json($license);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(License $license)
     {
-        //
+        $this->repository->delete($license);
+        return response()->json(null, 204);
     }
 }
