@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\{BlogPost, Invoice, Lead, License, Order, Page, PipelineStage, Product, Project, Quote, ReleaseChannel, Ticket, User, Version};
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +12,38 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $users = User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        Page::factory(5)->create();
+        BlogPost::factory(5)->for($users->random(), 'author')->create();
+
+        $channels = ReleaseChannel::factory()->count(3)->create();
+
+        Product::factory()
+            ->count(5)
+            ->has(Version::factory()->count(3)->state(fn () => ['release_channel_id' => $channels->random()->id]))
+            ->has(License::factory()->count(2)->for($users->random()))
+            ->create();
+
+        $stages = PipelineStage::factory()->count(4)->create();
+
+        Lead::factory()
+            ->count(10)
+            ->for($stages->random(), 'pipelineStage')
+            ->for($users->random(), 'assignedTo')
+            ->has(Quote::factory()->count(1)->for($users->random()))
+            ->create();
+
+        Order::factory()
+            ->count(5)
+            ->for($users->random())
+            ->has(Invoice::factory())
+            ->create();
+
+        Project::factory()
+            ->count(3)
+            ->for($users->random())
+            ->has(Ticket::factory()->count(2)->for($users->random()))
+            ->create();
     }
 }

@@ -1,0 +1,30 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Invoice;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends Factory<Invoice>
+ */
+class InvoiceFactory extends Factory
+{
+    protected $model = Invoice::class;
+
+    public function definition(): array
+    {
+        $subtotal = $this->faker->randomFloat(2, 50, 500);
+        $tax = $subtotal * 0.1;
+        return [
+            'number' => $this->faker->unique()->numerify('INV-####'),
+            'currency' => 'USD',
+            'subtotal' => $subtotal,
+            'discount_total' => 0,
+            'tax_total' => $tax,
+            'grand_total' => $subtotal + $tax,
+            'status' => 'unpaid',
+            'due_at' => now()->addMonth(),
+        ];
+    }
+}
