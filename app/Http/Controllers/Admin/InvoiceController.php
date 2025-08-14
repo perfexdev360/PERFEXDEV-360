@@ -3,64 +3,52 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\InvoiceRequest;
 use App\Models\Invoice;
-use Illuminate\Http\Request;
+use App\Repositories\InvoiceRepository;
 
 class InvoiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(protected InvoiceRepository $repository)
+    {
+        $this->authorizeResource(Invoice::class, 'invoice');
+    }
+
     public function index()
     {
-        //
+        return response()->json($this->repository->all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return response()->json([]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(InvoiceRequest $request)
     {
-        //
+        $invoice = $this->repository->create($request->validated());
+        return response()->json($invoice, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Invoice $invoice)
     {
-        //
+        return response()->json($this->repository->find($invoice));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Invoice $invoice)
     {
-        //
+        return response()->json($this->repository->find($invoice));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Invoice $invoice)
+    public function update(InvoiceRequest $request, Invoice $invoice)
     {
-        //
+        $invoice = $this->repository->update($invoice, $request->validated());
+        return response()->json($invoice);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Invoice $invoice)
     {
-        //
+        $this->repository->delete($invoice);
+        return response()->json(null, 204);
     }
 }

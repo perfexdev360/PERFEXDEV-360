@@ -9,3 +9,4 @@ Route::post('/activate', ActivationController::class);
 Route::get('/update', UpdateController::class);
 Route::get('/download/{version}', DownloadController::class)->name('download');
 
+
