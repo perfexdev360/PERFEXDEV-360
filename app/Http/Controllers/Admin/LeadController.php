@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\LeadRequest;
 use App\Models\Lead;
+use App\Models\LeadStageChange;
+use Illuminate\Http\Request;
 use App\Repositories\LeadRepository;
 
 class LeadController extends Controller
@@ -50,5 +52,34 @@ class LeadController extends Controller
     {
         $this->repository->delete($lead);
         return response()->json(null, 204);
+    }
+
+    /**
+     * Update the pipeline stage for the given lead.
+     */
+    public function moveStage(Request $request, Lead $lead)
+    {
+        $data = $request->validate([
+            'stage_id' => ['required', 'integer', 'exists:pipeline_stages,id'],
+        ]);
+
+        $from = $lead->pipeline_stage_id;
+        $to = $data['stage_id'];
+
+        if ($from === $to) {
+            return response()->noContent();
+        }
+
+        $lead->pipeline_stage_id = $to;
+        $lead->save();
+
+        $change = new LeadStageChange();
+        $change->lead_id = $lead->id;
+        $change->from_stage_id = $from;
+        $change->to_stage_id = $to;
+        $change->changed_by = optional($request->user())->id;
+        $change->save();
+
+        return response()->json(['status' => 'ok']);
     }
 }

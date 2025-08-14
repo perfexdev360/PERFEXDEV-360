@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\LeadController;
+
+
+Route::patch('/admin/leads/{lead}/stage', [LeadController::class, 'moveStage']);
 use App\Http\Controllers\Webhook\StripeWebhookController;
 use App\Http\Controllers\Webhook\PayPalWebhookController;
 
