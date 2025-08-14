@@ -3,64 +3,52 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\PageRequest;
 use App\Models\Page;
-use Illuminate\Http\Request;
+use App\Repositories\PageRepository;
 
 class PageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(protected PageRepository $repository)
+    {
+        $this->authorizeResource(Page::class, 'page');
+    }
+
     public function index()
     {
-        //
+        return response()->json($this->repository->all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return response()->json([]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(PageRequest $request)
     {
-        //
+        $page = $this->repository->create($request->validated());
+        return response()->json($page, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Page $page)
     {
-        //
+        return response()->json($this->repository->find($page));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Page $page)
     {
-        //
+        return response()->json($this->repository->find($page));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Page $page)
+    public function update(PageRequest $request, Page $page)
     {
-        //
+        $page = $this->repository->update($page, $request->validated());
+        return response()->json($page);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Page $page)
     {
-        //
+        $this->repository->delete($page);
+        return response()->json(null, 204);
     }
 }

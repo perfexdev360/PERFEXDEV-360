@@ -36,5 +36,6 @@ class QuoteApproved extends Notification implements ShouldQueue
             'message' => $this->message,
             'url' => $this->url,
         ];
+
     }
 }
