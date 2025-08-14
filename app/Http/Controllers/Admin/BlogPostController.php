@@ -3,64 +3,52 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\BlogPostRequest;
 use App\Models\BlogPost;
-use Illuminate\Http\Request;
+use App\Repositories\BlogPostRepository;
 
 class BlogPostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(protected BlogPostRepository $repository)
+    {
+        $this->authorizeResource(BlogPost::class, 'blogPost');
+    }
+
     public function index()
     {
-        //
+        return response()->json($this->repository->all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return response()->json([]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(BlogPostRequest $request)
     {
-        //
+        $blogPost = $this->repository->create($request->validated());
+        return response()->json($blogPost, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(BlogPost $blogPost)
     {
-        //
+        return response()->json($this->repository->find($blogPost));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(BlogPost $blogPost)
     {
-        //
+        return response()->json($this->repository->find($blogPost));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, BlogPost $blogPost)
+    public function update(BlogPostRequest $request, BlogPost $blogPost)
     {
-        //
+        $blogPost = $this->repository->update($blogPost, $request->validated());
+        return response()->json($blogPost);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(BlogPost $blogPost)
     {
-        //
+        $this->repository->delete($blogPost);
+        return response()->json(null, 204);
     }
 }

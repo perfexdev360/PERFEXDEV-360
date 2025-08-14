@@ -3,64 +3,52 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\TicketRequest;
 use App\Models\Ticket;
-use Illuminate\Http\Request;
+use App\Repositories\TicketRepository;
 
 class TicketController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(protected TicketRepository $repository)
+    {
+        $this->authorizeResource(Ticket::class, 'ticket');
+    }
+
     public function index()
     {
-        //
+        return response()->json($this->repository->all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return response()->json([]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(TicketRequest $request)
     {
-        //
+        $ticket = $this->repository->create($request->validated());
+        return response()->json($ticket, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Ticket $ticket)
     {
-        //
+        return response()->json($this->repository->find($ticket));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Ticket $ticket)
     {
-        //
+        return response()->json($this->repository->find($ticket));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Ticket $ticket)
+    public function update(TicketRequest $request, Ticket $ticket)
     {
-        //
+        $ticket = $this->repository->update($ticket, $request->validated());
+        return response()->json($ticket);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Ticket $ticket)
     {
-        //
+        $this->repository->delete($ticket);
+        return response()->json(null, 204);
     }
 }
