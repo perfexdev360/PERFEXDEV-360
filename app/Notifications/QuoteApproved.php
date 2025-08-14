@@ -2,38 +2,40 @@
 
 namespace App\Notifications;
 
-use App\Models\Quote;
-use App\Models\Invoice;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
-class QuoteApproved extends Notification
+class QuoteApproved extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(
-        protected Quote $quote,
-        protected Invoice $invoice
-    ) {
-    }
-
-    /**
-     * Get the notification's delivery channels.
-     */
-    public function via($notifiable): array
+    public function __construct(public string $message, public ?string $url = null)
     {
-        return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail($notifiable): MailMessage
+    public function via(object $notifiable): array
+    {
+        return ['mail', 'database'];
+    }
+
+    public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
             ->subject('Quote Approved')
-            ->line('Your quote #' . $this->quote->number . ' has been approved.')
-            ->action('View Invoice', url('/invoices/' . $this->invoice->id));
+            ->view('emails.quote_approved', [
+                'message' => $this->message,
+                'url' => $this->url,
+            ]);
+    }
+
+    public function toDatabase(object $notifiable): array
+    {
+        return [
+            'message' => $this->message,
+            'url' => $this->url,
+        ];
+
     }
 }
