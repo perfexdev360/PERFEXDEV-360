@@ -10,14 +10,16 @@ use App\Models\User;
 
 class Quote extends Model
 {
-    /**
-     * The attributes that aren't mass assignable.
-     */
     protected $guarded = [];
-     * Fields that can be mass assigned.
-     *
-     * @var array<int, string>
-     */
+
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     protected $fillable = [
         'status',
         'number',

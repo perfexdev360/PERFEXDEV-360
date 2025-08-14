@@ -10,6 +10,9 @@ use App\Models\License;
 
 class Order extends Model
 {
+    protected $guarded = [];
+
+    public function user()
     /**
      * @var array<int, string>
      */
@@ -25,6 +28,9 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
     /**
      * License associated with the order.
      */

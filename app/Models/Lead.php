@@ -6,12 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Lead extends Model
 {
-    /**
-     * The attributes that aren't mass assignable.
-     */
     protected $guarded = [];
-     * The attributes that are mass assignable.
-     */
+
+    public function pipelineStage()
+    {
+        return $this->belongsTo(PipelineStage::class);
+    }
+
+    public function assignedTo()
+    {
+        return $this->belongsTo(User::class, 'assigned_to_id');
+    }
+
+    public function quotes()
+    {
+        return $this->hasMany(Quote::class);
+    }
+ 
     protected $fillable = [
         'name',
         'email',
