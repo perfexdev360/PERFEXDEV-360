@@ -1,5 +1,5 @@
 @extends('layouts.admin')
 
 @section('content')
-    <h1>Blog Posts Index</h1>
+    <h1>Team Members Index</h1>
 @endsection
