@@ -24,6 +24,10 @@
         <textarea class="w-full border-gray-300 rounded" name="message" id="message" rows="5" required>{{ old('message') }}</textarea>
         @error('message')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
     </div>
+    <div class="hidden">
+        <label for="website">Website</label>
+        <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
+    </div>
     <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" type="submit">Send</button>
 </form>
 @endsection

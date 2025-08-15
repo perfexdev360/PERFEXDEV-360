@@ -32,7 +32,9 @@ Route::post('/checkout/{product}', [CheckoutController::class, 'process'])->name
 Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::post('/contact', [ContactController::class, 'store'])
+    ->middleware('throttle:contact')
+    ->name('contact.store');
 
 Route::get('/sitemap.xml', function () {
     return Sitemap::create()
