@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\License;
+use App\Models\Release;
 use App\Models\ReleaseChannel;
-use App\Models\Version;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
@@ -31,26 +31,27 @@ class UpdateController extends Controller
         $channelName = $data['channel'] ?? 'stable';
         $channelId = ReleaseChannel::where('name', $channelName)->value('id');
 
-        $version = Version::where('product_id', $license->product_id)
+        $release = Release::where('product_id', $license->product_id)
             ->when($channelId, fn($q) => $q->where('release_channel_id', $channelId))
             ->where('is_published', true)
             ->orderByDesc('released_at')
+            ->with('version')
             ->first();
 
-        if (! $version) {
+        if (! $release) {
             return response()->json(['message' => 'No release'], 404);
         }
 
-        $artifact = $version->fileArtifacts()->first();
+        $artifact = $release->fileArtifacts()->first();
 
         $url = URL::temporarySignedRoute(
             'download',
             now()->addMinutes(10),
-            ['version' => $version->id, 'license_key' => $license->license_key]
+            ['release' => $release->id, 'license_key' => $license->license_key]
         );
 
         return response()->json([
-            'version' => $version->number,
+            'version' => $release->version->number,
             'download_url' => $url,
             'checksum' => $artifact?->hash,
         ]);

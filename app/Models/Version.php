@@ -18,20 +18,8 @@ class Version extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function releaseChannel(): BelongsTo
+    public function releases(): HasMany
     {
-        return $this->belongsTo(ReleaseChannel::class);
-    }
-
-    protected $casts = [
-        'is_published' => 'boolean',
-        'notes' => 'array',
-        'forced_update' => 'boolean',
-        'released_at' => 'datetime',
-    ];
-
-    public function fileArtifacts(): HasMany
-    {
-        return $this->hasMany(FileArtifact::class);
+        return $this->hasMany(Release::class);
     }
 }
