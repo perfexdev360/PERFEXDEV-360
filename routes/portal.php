@@ -5,16 +5,22 @@ use App\Http\Controllers\Portal\LicenseController;
 use App\Http\Controllers\Portal\PurchaseController;
 use App\Http\Controllers\Portal\QuoteController;
 use App\Http\Controllers\Portal\InvoiceController;
+use App\Http\Controllers\Portal\ProjectController;
+use App\Http\Controllers\Portal\TicketController;
 
 Route::middleware(['auth', 'verified', 'twofactor'])->group(function () {
     Route::get('/', function () {
         return 'Client Portal';
     });
 
+    Route::resource('quotes', QuoteController::class);
     Route::post('quotes/{quote}/approve', [QuoteController::class, 'approve'])
         ->name('quotes.approve');
     Route::post('quotes/{quote}/reject', [QuoteController::class, 'reject'])
         ->name('quotes.reject');
+
+    Route::resource('projects', ProjectController::class);
+    Route::resource('tickets', TicketController::class);
 
     Route::resource('invoices', InvoiceController::class)->only(['show']);
     Route::post('invoices/{invoice}/pay', [InvoiceController::class, 'pay'])
