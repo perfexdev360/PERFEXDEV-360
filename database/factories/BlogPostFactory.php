@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\BlogPost;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -17,6 +18,7 @@ class BlogPostFactory extends Factory
     {
         $title = $this->faker->sentence();
         return [
+            'category_id' => Category::factory(),
             'title' => $title,
             'slug' => Str::slug($title) . '-' . $this->faker->unique()->numberBetween(1, 1000),
             'body' => $this->faker->paragraph(),
