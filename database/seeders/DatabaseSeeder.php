@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{BlogPost, Invoice, Lead, License, Order, Page, PipelineStage, Product, Project, Quote, ReleaseChannel, Ticket, User, Version};
+use App\Models\{BlogPost, Invoice, Lead, License, Order, Page, PipelineStage, Product, Project, Quote, ReleaseChannel, Ticket, User, Version, Setting};
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,6 +19,12 @@ class DatabaseSeeder extends Seeder
             'role' => 'ADMIN',
         ]);
         $users->push($admin);
+
+        Setting::firstOrCreate([
+            'key' => 'google_meet_template',
+        ], [
+            'value' => 'https://meet.google.com/{code}',
+        ]);
 
         Page::factory(5)->create();
         BlogPost::factory(5)->for($users->random(), 'author')->create();

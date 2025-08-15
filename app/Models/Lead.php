@@ -43,6 +43,9 @@ class Lead extends Model
             ->flatMap(fn ($request) => array_keys($request->selected_options ?? []));
 
         return $tags->merge($optionTags)->unique();
+    public function meetings(): HasMany
+    {
+        return $this->hasMany(Meeting::class);
     }
  
     protected $fillable = [

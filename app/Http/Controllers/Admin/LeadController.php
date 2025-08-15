@@ -3,55 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\LeadRequest;
 use App\Models\Lead;
 use App\Models\LeadStageChange;
+use App\Models\PipelineStage;
 use Illuminate\Http\Request;
-use App\Repositories\LeadRepository;
+use function Spatie\Activitylog\activity;
 
 class LeadController extends Controller
 {
-    public function __construct(protected LeadRepository $repository)
-    {
-        $this->authorizeResource(Lead::class, 'lead');
-    }
-
     public function index()
     {
-        return response()->json($this->repository->all());
-    }
-
-    public function create()
-    {
-        return response()->json([]);
-    }
-
-    public function store(LeadRequest $request)
-    {
-        $lead = $this->repository->create($request->validated());
-        return response()->json($lead, 201);
-    }
-
-    public function show(Lead $lead)
-    {
-        return response()->json($this->repository->find($lead));
-    }
-
-    public function edit(Lead $lead)
-    {
-        return response()->json($this->repository->find($lead));
-    }
-
-    public function update(LeadRequest $request, Lead $lead)
-    {
-        $lead = $this->repository->update($lead, $request->validated());
-        return response()->json($lead);
-    }
-
-    public function destroy(Lead $lead)
-    {
-        $this->repository->delete($lead);
-        return response()->json(null, 204);
+        $stages = PipelineStage::with('leads')->orderBy('order')->get();
+        return view('admin.leads.index', compact('stages'));
     }
 
     /**
@@ -73,12 +36,23 @@ class LeadController extends Controller
         $lead->pipeline_stage_id = $to;
         $lead->save();
 
-        $change = new LeadStageChange();
-        $change->lead_id = $lead->id;
-        $change->from_stage_id = $from;
-        $change->to_stage_id = $to;
-        $change->changed_by = optional($request->user())->id;
-        $change->save();
+        LeadStageChange::create([
+            'lead_id' => $lead->id,
+            'from_stage_id' => $from,
+            'to_stage_id' => $to,
+            'changed_by' => optional($request->user())->id,
+        ]);
+
+        activity()
+            ->performedOn($lead)
+            ->withProperties(['from' => $from, 'to' => $to])
+            ->log('lead_stage_changed');
+
+        $stage = PipelineStage::find($to);
+        if ($stage && $stage->name === 'Proposal') {
+            $meeting = $lead->meetings()->create(['provider' => 'google_meet']);
+            return response()->json(['status' => 'ok', 'meeting_url' => $meeting->url]);
+        }
 
         return response()->json(['status' => 'ok']);
     }
