@@ -11,6 +11,7 @@ Route::middleware(['auth', 'verified', 'twofactor'])->group(function () {
         return 'Client Portal';
     });
 
+    Route::resource('quotes', QuoteController::class);
     Route::post('quotes/{quote}/approve', [QuoteController::class, 'approve'])
         ->name('quotes.approve');
     Route::post('quotes/{quote}/reject', [QuoteController::class, 'reject'])
