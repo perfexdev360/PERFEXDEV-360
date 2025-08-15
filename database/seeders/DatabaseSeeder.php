@@ -20,11 +20,15 @@ class DatabaseSeeder extends Seeder
         ]);
         $users->push($admin);
 
-        Setting::firstOrCreate([
-            'key' => 'google_meet_template',
-        ], [
-            'value' => 'https://meet.google.com/{code}',
-        ]);
+        Setting::firstOrCreate(['key' => 'branding.name'], ['value' => config('app.name')]);
+        Setting::firstOrCreate(['key' => 'branding.logo'], ['value' => null]);
+        Setting::firstOrCreate(['key' => 'tax.rate'], ['value' => null]);
+        Setting::firstOrCreate(['key' => 'invoice.prefix'], ['value' => 'INV']);
+        Setting::firstOrCreate(['key' => 'invoice.next_number'], ['value' => 1]);
+        Setting::firstOrCreate(['key' => 'meeting.url_template'], ['value' => 'https://meet.google.com/{code}']);
+        Setting::firstOrCreate(['key' => 'currency.default'], ['value' => 'USD']);
+        Setting::firstOrCreate(['key' => 'currency.supported'], ['value' => 'USD']);
+        Setting::firstOrCreate(['key' => 'app.timezone'], ['value' => 'UTC']);
 
         Page::factory(5)->create();
         BlogPost::factory(5)->for($users->random(), 'author')->create();
