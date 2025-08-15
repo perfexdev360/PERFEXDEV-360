@@ -15,6 +15,7 @@ use Spatie\Sitemap\Tags\Sitemap as SitemapTag;
 use App\Models\BlogPost;
 use App\Models\Product;
 use App\Models\CaseStudy;
+use Laravel\Horizon\Horizon;
 
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\SectionController;
@@ -79,6 +80,10 @@ Route::resources([
     'team-members' => TeamMemberController::class,
     'media' => MediaController::class,
 ]);
+
+if (class_exists(Horizon::class)) {
+    Horizon::route('/horizon');
+}
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\AIQueueController;
+use App\Http\Controllers\Admin\SettingController;
 
 Route::get('/', function () {
     return 'Admin Dashboard';
@@ -35,4 +36,7 @@ Route::delete('ai-queue/{blogPost}', [AIQueueController::class, 'reject'])->name
 
 Route::get('leads', [LeadController::class, 'index'])->name('leads.index');
 Route::post('leads/{lead}/move', [LeadController::class, 'moveStage'])->name('leads.move');
+
+Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
+Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
 

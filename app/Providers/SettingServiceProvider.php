@@ -23,6 +23,9 @@ class SettingServiceProvider extends ServiceProvider
                 Arr::set($config, $key, $value);
             }
             config(['settings' => $config]);
+            if (isset($config['app']['timezone'])) {
+                config(['app.timezone' => $config['app']['timezone']]);
+            }
         }
     }
 }
