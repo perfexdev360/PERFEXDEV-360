@@ -21,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(App\Http\Middleware\CanonicalRedirect::class);
+        $middleware->alias([
+            'twofactor' => App\Http\Middleware\EnsureTwoFactorEnabled::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
