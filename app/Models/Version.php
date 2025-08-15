@@ -13,6 +13,10 @@ class Version extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'notes' => 'array',
+    ];
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

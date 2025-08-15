@@ -21,6 +21,10 @@ class Order extends Model
         'user_id',
     ];
 
+    protected $casts = [
+        'billing_info' => 'array',
+    ];
+
     /**
      * Order belongs to a user.
      */

@@ -23,6 +23,10 @@ class Payment extends Model
         'paid_at',
     ];
 
+    protected $casts = [
+        'meta' => 'array',
+    ];
+
     protected static function booted(): void
     {
         static::created(function (Payment $payment): void {

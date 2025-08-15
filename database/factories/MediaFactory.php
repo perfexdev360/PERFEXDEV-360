@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Media;
+use App\Models\Page;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -13,8 +14,8 @@ class MediaFactory extends Factory
     public function definition(): array
     {
         return [
-            'model_type' => 'App\\Models\\Page',
-            'model_id' => 1,
+            'model_type' => Page::class,
+            'model_id' => Page::factory(),
             'uuid' => Str::uuid()->toString(),
             'collection_name' => 'default',
             'name' => $this->faker->word(),
