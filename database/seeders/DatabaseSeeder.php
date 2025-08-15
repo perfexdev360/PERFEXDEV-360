@@ -12,7 +12,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = User::factory(10)->create();
+        $users = User::factory(9)->create();
+        $admin = User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'role' => 'ADMIN',
+        ]);
+        $users->push($admin);
 
         Page::factory(5)->create();
         BlogPost::factory(5)->for($users->random(), 'author')->create();
