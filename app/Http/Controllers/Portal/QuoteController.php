@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Portal;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Portal\QuoteRequest;
 use App\Models\Quote;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class QuoteController extends Controller
 {
@@ -30,15 +31,19 @@ class QuoteController extends Controller
     /**
      * Show the form for creating a new quote.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->wantsJson()) {
+            return response()->json([]);
+        }
+
         return view('portal.quotes.create');
     }
 
     /**
      * Store a newly created quote for the authenticated user.
      */
-    public function store(Request $request)
+    public function store(QuoteRequest $request)
     {
         $validated = $request->validate([
             'valid_until' => ['nullable', 'date'],
@@ -49,6 +54,7 @@ class QuoteController extends Controller
             'status' => 'draft',
             'valid_until' => $validated['valid_until'] ?? null,
         ]);
+
 
         if ($request->wantsJson()) {
             return response()->json($quote, 201);
@@ -67,6 +73,7 @@ class QuoteController extends Controller
 
         $quote->load('items');
 
+
         if ($request->wantsJson()) {
             return response()->json($quote);
         }
@@ -81,13 +88,14 @@ class QuoteController extends Controller
     {
         abort_if($quote->user_id !== $request->user()->id, 403);
 
+
         return view('portal.quotes.edit', compact('quote'));
     }
 
     /**
      * Update the specified quote.
      */
-    public function update(Request $request, Quote $quote)
+    public function update(QuoteRequest $request, Quote $quote)
     {
         abort_if($quote->user_id !== $request->user()->id, 403);
 
@@ -102,6 +110,7 @@ class QuoteController extends Controller
         }
 
         return redirect()->route('portal.quotes.show', $quote)
+
             ->with('status', 'Quote updated.');
     }
 
@@ -119,11 +128,14 @@ class QuoteController extends Controller
         }
 
         return redirect()->route('portal.quotes.index')
+
             ->with('status', 'Quote deleted.');
     }
 
     public function approve(Request $request, Quote $quote): RedirectResponse
     {
+        abort_if($quote->user_id !== $request->user()->id, 403);
+
         $validated = $request->validate([
             'legal_name' => ['required', 'string'],
             'accept_terms' => ['accepted'],
@@ -136,6 +148,8 @@ class QuoteController extends Controller
 
     public function reject(Request $request, Quote $quote): RedirectResponse
     {
+        abort_if($quote->user_id !== $request->user()->id, 403);
+
         $validated = $request->validate([
             'legal_name' => ['required', 'string'],
             'accept_terms' => ['accepted'],

@@ -26,7 +26,11 @@ class TicketController extends Controller
 
     public function store(TicketRequest $request)
     {
-        $ticket = $this->repository->create($request->validated());
+        $data = $request->validated();
+        $data['user_id'] = $data['user_id'] ?? $request->user()->id;
+
+        $ticket = $this->repository->create($data);
+
         return response()->json($ticket, 201);
     }
 
@@ -42,7 +46,11 @@ class TicketController extends Controller
 
     public function update(TicketRequest $request, Ticket $ticket)
     {
-        $ticket = $this->repository->update($ticket, $request->validated());
+        $data = $request->validated();
+        $data['user_id'] = $data['user_id'] ?? $ticket->user_id;
+
+        $ticket = $this->repository->update($ticket, $data);
+
         return response()->json($ticket);
     }
 

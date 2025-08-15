@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Portal;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -17,9 +17,7 @@ class TicketRequest extends FormRequest
             'subject' => ['required', 'string', 'max:255'],
             'category' => ['nullable', 'string', 'max:255'],
             'priority' => ['required', 'in:low,normal,high,urgent'],
-            'status' => ['required', 'in:open,pending,resolved,closed'],
-            'user_id' => ['nullable', 'exists:users,id'],
-            'project_id' => ['nullable', 'exists:projects,id'],
+            'status' => ['sometimes', 'in:open,pending,resolved,closed'],
         ];
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\AppServiceProvider;
+use App\Providers\AuthServiceProvider;
 use App\Providers\RouteServiceProvider;
 use App\Providers\SettingServiceProvider;
 use Illuminate\Foundation\Application;
@@ -10,6 +11,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 return Application::configure(basePath: dirname(__DIR__))
     ->withProviders([
         AppServiceProvider::class,
+        AuthServiceProvider::class,
         RouteServiceProvider::class,
         SettingServiceProvider::class,
     ])

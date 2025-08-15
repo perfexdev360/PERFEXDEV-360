@@ -5,6 +5,8 @@ use App\Http\Controllers\Portal\LicenseController;
 use App\Http\Controllers\Portal\PurchaseController;
 use App\Http\Controllers\Portal\QuoteController;
 use App\Http\Controllers\Portal\InvoiceController;
+use App\Http\Controllers\Portal\ProjectController;
+use App\Http\Controllers\Portal\TicketController;
 
 Route::middleware(['auth', 'verified', 'twofactor'])->group(function () {
     Route::get('/', function () {
@@ -16,6 +18,11 @@ Route::middleware(['auth', 'verified', 'twofactor'])->group(function () {
         ->name('quotes.approve');
     Route::post('quotes/{quote}/reject', [QuoteController::class, 'reject'])
         ->name('quotes.reject');
+
+    Route::resource('quotes', QuoteController::class)->only(['index', 'show']);
+
+    Route::resource('projects', ProjectController::class);
+    Route::resource('tickets', TicketController::class);
 
     Route::resource('invoices', InvoiceController::class)->only(['show']);
     Route::post('invoices/{invoice}/pay', [InvoiceController::class, 'pay'])
@@ -30,5 +37,8 @@ Route::middleware(['auth', 'verified', 'twofactor'])->group(function () {
     Route::get('licenses/{license}/download/{release}', [LicenseController::class, 'download'])
         ->name('licenses.download')
         ->middleware('signed');
+
+    Route::resource('projects', ProjectController::class);
+    Route::resource('tickets', TicketController::class);
 });
 
