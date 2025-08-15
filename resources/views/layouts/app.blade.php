@@ -336,7 +336,9 @@
 
         <!-- Page Content -->
         <main class="p-6">
-            {{ $slot }}
+            <div x-data="page" x-transition.opacity>
+                @yield('content', $slot)
+            </div>
         </main>
     </div>
 
