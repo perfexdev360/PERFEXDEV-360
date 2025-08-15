@@ -76,4 +76,16 @@ class QuoteController extends Controller
 
         return back()->with('status', 'Quote approved.');
     }
+
+    public function reject(Request $request, Quote $quote): RedirectResponse
+    {
+        $validated = $request->validate([
+            'legal_name' => ['required', 'string'],
+            'accept_terms' => ['accepted'],
+        ]);
+
+        $quote->reject($validated['legal_name'], $request->ip());
+
+        return back()->with('status', 'Quote rejected.');
+    }
 }

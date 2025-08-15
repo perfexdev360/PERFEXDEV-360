@@ -18,15 +18,20 @@ class PaymentReceipt extends Mailable
 
     public function build()
     {
-        $pdf = Pdf::loadView('invoices.receipt', [
-            'invoice' => $this->payment->invoice,
-            'payment' => $this->payment,
-        ]);
-
-        return $this->subject('Payment Receipt')
+        $mail = $this->subject('Payment Receipt')
             ->view('emails.payment-receipt', [
                 'payment' => $this->payment,
-            ])
-            ->attachData($pdf->output(), 'invoice-'.$this->payment->invoice->number.'.pdf');
+            ]);
+
+        if (class_exists(Pdf::class)) {
+            $pdf = Pdf::loadView('invoices.receipt', [
+                'invoice' => $this->payment->invoice,
+                'payment' => $this->payment,
+            ]);
+
+            $mail->attachData($pdf->output(), 'invoice-' . $this->payment->invoice->number . '.pdf');
+        }
+
+        return $mail;
     }
 }

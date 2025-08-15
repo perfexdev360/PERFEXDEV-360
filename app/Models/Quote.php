@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\QuoteApproved;
+use App\Notifications\QuoteRejected;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -81,9 +82,29 @@ class Quote extends Model
         ]);
 
         if ($this->user) {
-            $this->user->notify(new QuoteApproved($this, $invoice));
+            $this->user->notify(new QuoteApproved('Quote approved'));
         }
 
         return $invoice;
+    }
+
+    /**
+     * Reject the quote with an e-signature and notify the user.
+     */
+    public function reject(string $name, string $ip): void
+    {
+        $this->status = 'rejected';
+        $meta = $this->meta ?? [];
+        $meta['signature'] = [
+            'name' => $name,
+            'signed_at' => now(),
+            'ip_hash' => hash('sha256', $ip),
+        ];
+        $this->meta = $meta;
+        $this->save();
+
+        if ($this->user) {
+            $this->user->notify(new QuoteRejected('Quote rejected'));
+        }
     }
 }

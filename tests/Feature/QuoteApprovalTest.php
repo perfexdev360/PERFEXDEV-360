@@ -1,7 +1,8 @@
 <?php
 
-use App\Models\{Quote, QuoteItem, Invoice};
+use App\Models\{Quote, QuoteItem, Invoice, User};
 use function Pest\Laravel\post;
+use function Pest\Laravel\actingAs;
 
 it('calculates totals from line items', function () {
     $quote = Quote::factory()->create([
@@ -50,7 +51,9 @@ it('approves a quote via e-sign and creates an invoice', function () {
 
     $quote->refresh();
 
-    $response = post(route('quotes.approve', $quote), [
+    actingAs(User::factory()->create(['role' => 'client']));
+
+    $response = post(route('portal.quotes.approve', $quote), [
         'legal_name' => 'Jane Doe',
         'accept_terms' => '1',
     ]);
@@ -68,5 +71,26 @@ it('approves a quote via e-sign and creates an invoice', function () {
     expect($invoice)->not->toBeNull();
     expect($invoice->number)->toBe('INV-' . $quote->number);
     expect($invoice->grand_total)->toBe($quote->grand_total);
+});
+
+it('rejects a quote via e-sign', function () {
+    $quote = Quote::factory()->create();
+
+    actingAs(User::factory()->create(['role' => 'client']));
+
+    $response = post(route('portal.quotes.reject', $quote), [
+        'legal_name' => 'John Doe',
+        'accept_terms' => '1',
+    ]);
+
+    $response->assertSessionHasNoErrors();
+
+    $quote->refresh();
+    expect($quote->status)->toBe('rejected');
+    expect($quote->meta['signature']['name'])->toBe('John Doe');
+    expect($quote->meta['signature']['ip_hash'])
+        ->toBe(hash('sha256', '127.0.0.1'));
+    expect($quote->meta['signature']['signed_at'])->not->toBeNull();
+    expect(Invoice::count())->toBe(0);
 });
 
