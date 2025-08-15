@@ -9,14 +9,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('two_factor_secret')->nullable()->after('remember_token');
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('two_factor_secret');
         });
     }
 };
