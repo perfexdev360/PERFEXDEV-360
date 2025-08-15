@@ -33,7 +33,7 @@ Here you go — a single, copy-paste **MASTER PROMPT** that generates the comple
 
 * **Tailwind + Alpine only** for interactivity.
 * Component-first Blade architecture. Reusable, documented components.
-* Feature flags for risky/AI features (`config/features.php`).
+* Feature flags for risky/AI features (`config/features.php`). ✅ Done — 2025-08-15 (commit: <hash>)
 
 ---
 
@@ -451,3 +451,10 @@ SITEMAP_ENABLE=true
 * CI workflow, Docker files, README, Postman & OpenAPI docs
 
 **Non-negotiables:** Tailwind+Alpine only, clean modular code, strong tests, secure defaults, SEO-ready, **03390123735** surfaced in configured CTAs.
+
+## Build Log
+
+- 2025-08-15T14:26:57Z — Sprint 0 — Feature flags & CTA phone seeding — ✅ Done (commit: <hash>)
+  - Added: config/features.php, database/seeders/SettingSeeder.php, resources/views/components/cta.blade.php, tests/Feature/CtaComponentTest.php
+  - Modified: app/Models/Setting.php, database/seeders/DatabaseSeeder.php, Roadmap.md
+  - Notes: AI content feature flag introduced; default phone 03390123735 seeded and displayed via CTA component

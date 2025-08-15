@@ -5,6 +5,10 @@ namespace Database\Seeders;
 use App\Models\{BlogPost, Invoice, Lead, License, Order, Page, PipelineStage, Product, Project, Quote, ReleaseChannel, Ticket, User, Version};
 use Illuminate\Database\Seeder;
 
+/**
+ * @see \Database\Seeders\SettingSeeder
+ */
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -12,6 +16,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(SettingSeeder::class);
+
         $users = User::factory(9)->create();
         $admin = User::factory()->create([
             'name' => 'Admin User',
