@@ -51,6 +51,10 @@ class BlogPost extends Model
         return 'slug';
     }
 
+    protected $casts = [
+        'seo' => 'array',
+    ];
+
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');

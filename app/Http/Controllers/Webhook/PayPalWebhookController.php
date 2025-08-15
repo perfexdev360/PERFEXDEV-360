@@ -47,7 +47,7 @@ class PayPalWebhookController extends Controller
         $payment->amount = $amount;
         $payment->currency = $currency;
         $payment->status = 'succeeded';
-        $payment->meta = json_encode($payload);
+        $payment->meta = $payload;
         $payment->paid_at = now();
         $payment->save();
 

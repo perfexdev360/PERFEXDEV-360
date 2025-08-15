@@ -47,7 +47,7 @@ class StripeWebhookController extends Controller
         $payment->amount = $amount ? $amount / 100 : 0;
         $payment->currency = $currency;
         $payment->status = 'succeeded';
-        $payment->meta = json_encode($payload);
+        $payment->meta = $payload;
         $payment->paid_at = now();
         $payment->save();
 

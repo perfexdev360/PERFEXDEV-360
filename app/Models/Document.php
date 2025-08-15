@@ -14,6 +14,10 @@ class Document extends Model
 
     protected $appends = ['signed_url'];
 
+    protected $casts = [
+        'meta' => 'array',
+    ];
+
     protected static function booted(): void
     {
         static::creating(function (Document $document) {

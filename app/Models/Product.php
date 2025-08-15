@@ -11,6 +11,10 @@ class Product extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'seo' => 'array',
+    ];
+
     public function versions()
     {
         return $this->hasMany(Version::class);

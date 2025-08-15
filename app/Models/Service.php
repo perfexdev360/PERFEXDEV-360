@@ -18,6 +18,10 @@ class Service extends Model
      */
     protected $guarded = [];
 
+    protected $casts = [
+        'seo' => 'array',
+    ];
+
     /**
      * Options available for the service.
      */
