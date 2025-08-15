@@ -8,15 +8,16 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use function activity;
 
-class ActivationController extends Controller
+class RotationController extends Controller
 {
     /**
-     * Handle an activation request for a license.
+     * Rotate an existing license activation.
      */
     public function __invoke(Request $request): JsonResponse
     {
         $data = $request->validate([
             'license_key' => 'required|string',
+            'activation_id' => 'required|integer',
             'domain' => 'nullable|string',
             'ip_hash' => 'nullable|string',
             'fingerprint' => 'nullable|string',
@@ -29,11 +30,8 @@ class ActivationController extends Controller
             return response()->json(['message' => 'License revoked'], 403);
         }
 
-        if ($license->activations()->count() >= $license->activation_limit) {
-            return response()->json(['message' => 'Activation limit reached'], 429);
-        }
-
-        $activation = $license->activations()->create([
+        $activation = $license->activations()->findOrFail($data['activation_id']);
+        $activation->update([
             'domain' => $data['domain'] ?? null,
             'ip_hash' => $data['ip_hash'] ?? null,
             'fingerprint' => $data['fingerprint'] ?? null,
@@ -42,16 +40,15 @@ class ActivationController extends Controller
         ]);
 
         $license->events()->create([
-            'event' => 'activated',
+            'event' => 'rotated',
             'meta' => ['activation_id' => $activation->id],
         ]);
 
         activity('license')
             ->performedOn($license)
             ->withProperties(['activation_id' => $activation->id])
-            ->log('activated');
+            ->log('rotated');
 
         return response()->json(['status' => 'ok']);
     }
 }
-
