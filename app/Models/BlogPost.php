@@ -51,9 +51,6 @@ class BlogPost extends Model
         return 'slug';
     }
 
-    protected $casts = [
-        'seo' => 'array',
-    ];
 
     public function author()
     {

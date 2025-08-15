@@ -43,11 +43,12 @@ class Lead extends Model
             ->flatMap(fn ($request) => array_keys($request->selected_options ?? []));
 
         return $tags->merge($optionTags)->unique();
-    public function meetings(): HasMany
+    }
+        public function meetings(): HasMany
     {
         return $this->hasMany(Meeting::class);
     }
- 
+
     protected $fillable = [
         'name',
         'email',
@@ -61,5 +62,10 @@ class Lead extends Model
         'timeline',
         'tech_stack',
         'assigned_to_id',
+    ];
+    protected $casts = [
+        'tech_stack' => 'string',
+        'budget_min' => 'decimal:2',
+        'budget_max' => 'decimal:2',
     ];
 }
