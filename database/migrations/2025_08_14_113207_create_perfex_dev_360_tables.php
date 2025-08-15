@@ -188,7 +188,14 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('blog_categories', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->timestamps();
+        });
+
+        Schema::create('tags', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
@@ -198,7 +205,7 @@ return new class extends Migration {
         Schema::create('blog_posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('blog_category_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
             $table->string('title');
             $table->string('slug')->unique();
             $table->longText('body');
@@ -206,6 +213,12 @@ return new class extends Migration {
             $table->boolean('is_published')->default(false);
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
+        });
+
+        Schema::create('blog_post_tag', function (Blueprint $table) {
+            $table->foreignId('blog_post_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tag_id')->constrained()->cascadeOnDelete();
+            $table->primary(['blog_post_id', 'tag_id']);
         });
 
         Schema::create('case_studies', function (Blueprint $table) {
@@ -224,6 +237,15 @@ return new class extends Migration {
             $table->string('role')->nullable();
             $table->text('quote');
             $table->unsignedTinyInteger('rating')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('team_members', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('role');
+            $table->text('bio')->nullable();
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
 
@@ -764,10 +786,13 @@ return new class extends Migration {
         Schema::dropIfExists('products');
         Schema::dropIfExists('product_categories');
 
+        Schema::dropIfExists('team_members');
         Schema::dropIfExists('testimonials');
+        Schema::dropIfExists('blog_post_tag');
+        Schema::dropIfExists('tags');
         Schema::dropIfExists('case_studies');
         Schema::dropIfExists('blog_posts');
-        Schema::dropIfExists('blog_categories');
+        Schema::dropIfExists('categories');
         Schema::dropIfExists('sections');
         Schema::dropIfExists('pages');
         Schema::dropIfExists('media');

@@ -13,6 +13,16 @@ use Spatie\Sitemap\Tags\Sitemap as SitemapTag;
 use App\Models\BlogPost;
 use App\Models\Product;
 use App\Models\CaseStudy;
+
+use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\SectionController;
+use App\Http\Controllers\Admin\BlogPostController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\CaseStudyController;
+use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\TeamMemberController;
+use App\Http\Controllers\Admin\MediaController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
@@ -50,6 +60,17 @@ Route::get('/sitemap-cases.xml', function () {
 Route::get('/robots.txt', function () {
     return response()->view('components.robots')->header('Content-Type', 'text/plain');
 });
+Route::resources([
+    'pages' => PageController::class,
+    'sections' => SectionController::class,
+    'blog-posts' => BlogPostController::class,
+    'categories' => CategoryController::class,
+    'tags' => TagController::class,
+    'case-studies' => CaseStudyController::class,
+    'testimonials' => TestimonialController::class,
+    'team-members' => TeamMemberController::class,
+    'media' => MediaController::class,
+]);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
