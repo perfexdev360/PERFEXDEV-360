@@ -18,6 +18,7 @@ class TicketFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
+            'project_id' => Project::factory(),
             'subject' => $this->faker->sentence(),
             'category' => $this->faker->word(),
             'priority' => $this->faker->randomElement(['low','normal','high','urgent']),
