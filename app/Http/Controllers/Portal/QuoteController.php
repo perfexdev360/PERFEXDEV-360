@@ -6,16 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Portal\QuoteRequest;
 use App\Models\Quote;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class QuoteController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the user's quotes.
      */
     public function index(Request $request)
     {
-        $quotes = $request->user()->quotes()->latest()->get();
+        $quotes = $request->user()
+            ->quotes()
+            ->latest()
+            ->paginate(10);
 
         if ($request->wantsJson()) {
             return response()->json($quotes);
@@ -25,7 +29,7 @@ class QuoteController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new quote.
      */
     public function create(Request $request)
     {
@@ -37,26 +41,38 @@ class QuoteController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created quote for the authenticated user.
      */
     public function store(QuoteRequest $request)
     {
-        $quote = $request->user()->quotes()->create($request->validated());
+        $validated = $request->validate([
+            'valid_until' => ['nullable', 'date'],
+        ]);
+
+        $quote = $request->user()->quotes()->create([
+            'number' => 'Q' . now()->format('YmdHis') . Str::random(4),
+            'status' => 'draft',
+            'valid_until' => $validated['valid_until'] ?? null,
+        ]);
+
 
         if ($request->wantsJson()) {
             return response()->json($quote, 201);
         }
 
-        return redirect()->route('quotes.show', $quote)
+        return redirect()->route('portal.quotes.show', $quote)
             ->with('status', 'Quote created.');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified quote.
      */
-    public function show(Request $request, Quote $quote)
+    public function show(Quote $quote, Request $request)
     {
         abort_if($quote->user_id !== $request->user()->id, 403);
+
+        $quote->load('items');
+
 
         if ($request->wantsJson()) {
             return response()->json($quote);
@@ -66,38 +82,40 @@ class QuoteController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified quote.
      */
-    public function edit(Request $request, Quote $quote)
+    public function edit(Quote $quote, Request $request)
     {
         abort_if($quote->user_id !== $request->user()->id, 403);
 
-        if ($request->wantsJson()) {
-            return response()->json($quote);
-        }
 
         return view('portal.quotes.edit', compact('quote'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified quote.
      */
     public function update(QuoteRequest $request, Quote $quote)
     {
         abort_if($quote->user_id !== $request->user()->id, 403);
 
-        $quote->update($request->validated());
+        $validated = $request->validate([
+            'valid_until' => ['nullable', 'date'],
+        ]);
+
+        $quote->update($validated);
 
         if ($request->wantsJson()) {
             return response()->json($quote);
         }
 
-        return redirect()->route('quotes.show', $quote)
+        return redirect()->route('portal.quotes.show', $quote)
+
             ->with('status', 'Quote updated.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified quote from storage.
      */
     public function destroy(Request $request, Quote $quote)
     {
@@ -106,10 +124,11 @@ class QuoteController extends Controller
         $quote->delete();
 
         if ($request->wantsJson()) {
-            return response()->json(null, 204);
+            return response()->json([], 204);
         }
 
-        return redirect()->route('quotes.index')
+        return redirect()->route('portal.quotes.index')
+
             ->with('status', 'Quote deleted.');
     }
 
