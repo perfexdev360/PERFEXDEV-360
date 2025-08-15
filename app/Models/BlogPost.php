@@ -11,6 +11,10 @@ class BlogPost extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'seo' => 'array',
+    ];
+
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
