@@ -11,6 +11,10 @@ class License extends Model
 {
     use HasFactory;
 
+    public const TYPE_SINGLE = 'single';
+    public const TYPE_MULTI = 'multi';
+    public const TYPE_ENTERPRISE = 'enterprise';
+
     protected $guarded = [];
 
     public function product(): BelongsTo
@@ -26,6 +30,7 @@ class License extends Model
     protected $casts = [
         'update_window_ends_at' => 'datetime',
         'is_revoked' => 'boolean',
+        'duration_days' => 'integer',
     ];
 
     public function activations(): HasMany
@@ -36,5 +41,10 @@ class License extends Model
     public function events(): HasMany
     {
         return $this->hasMany(LicenseEvent::class);
+    }
+
+    public function activationHistory(): HasMany
+    {
+        return $this->events()->whereIn('event', ['activated', 'rotated']);
     }
 }

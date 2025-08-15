@@ -44,6 +44,7 @@ class FlowService
                 'user_id' => $user->id,
                 'license_key' => Str::uuid()->toString(),
                 'type' => 'standard',
+                'duration_days' => 365,
                 'activation_limit' => 5,
                 'update_window_ends_at' => now()->addYear(),
             ]);
