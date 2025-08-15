@@ -18,6 +18,7 @@ class LicenseFactory extends Factory
         return [
             'license_key' => Str::upper(Str::random(16)),
             'type' => $this->faker->randomElement(['single','multi','enterprise']),
+            'duration_days' => 365,
             'activation_limit' => 1,
             'update_window_ends_at' => now()->addYear(),
             'is_revoked' => false,

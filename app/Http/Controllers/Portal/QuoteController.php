@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Portal;
 use App\Http\Controllers\Controller;
 use App\Models\Quote;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 class QuoteController extends Controller
 {
@@ -62,5 +63,17 @@ class QuoteController extends Controller
     public function destroy(Quote $quote)
     {
         //
+    }
+
+    public function approve(Request $request, Quote $quote): RedirectResponse
+    {
+        $validated = $request->validate([
+            'legal_name' => ['required', 'string'],
+            'accept_terms' => ['accepted'],
+        ]);
+
+        $quote->approve($validated['legal_name'], $request->ip());
+
+        return back()->with('status', 'Quote approved.');
     }
 }

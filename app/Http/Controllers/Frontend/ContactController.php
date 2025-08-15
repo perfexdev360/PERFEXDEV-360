@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Lead;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Http\Requests\ContactRequest;
 
 class ContactController extends Controller
 {
@@ -21,14 +21,9 @@ class ContactController extends Controller
     /**
      * Store a new contact lead.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(ContactRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email'],
-            'phone' => ['nullable', 'string', 'max:255'],
-            'message' => ['required', 'string'],
-        ]);
+        $validated = $request->validated();
 
         Lead::create([
             'name' => $validated['name'],

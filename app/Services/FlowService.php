@@ -6,6 +6,7 @@ use App\Models\{Invoice, Lead, LeadStageChange, License, LicenseActivation, Orde
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use function Spatie\Activitylog\activity;
 
 /**
  * High level orchestration for common business flows.
@@ -44,6 +45,7 @@ class FlowService
                 'user_id' => $user->id,
                 'license_key' => Str::uuid()->toString(),
                 'type' => 'standard',
+                'duration_days' => 365,
                 'activation_limit' => 5,
                 'update_window_ends_at' => now()->addYear(),
             ]);
@@ -90,6 +92,13 @@ class FlowService
             'to_stage_id' => $stage->id,
             'changed_by' => $actor?->id,
         ]);
+
+        activity()
+            ->performedOn($lead)
+            ->withProperties([
+                'from' => $from,
+                'to' => $stage->id,
+            ])->log('lead_stage_changed');
 
         return $lead;
     }

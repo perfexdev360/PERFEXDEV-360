@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\License;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use function activity;
 
 class ActivationController extends Controller
 {
@@ -44,6 +45,11 @@ class ActivationController extends Controller
             'event' => 'activated',
             'meta' => ['activation_id' => $activation->id],
         ]);
+
+        activity('license')
+            ->performedOn($license)
+            ->withProperties(['activation_id' => $activation->id])
+            ->log('activated');
 
         return response()->json(['status' => 'ok']);
     }
