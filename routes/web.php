@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ProductController;
 use App\Http\Controllers\Frontend\ServiceController;
+use App\Http\Controllers\Frontend\RfqController;
 use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\Frontend\CheckoutController;
@@ -30,6 +31,8 @@ Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name
 Route::get('/checkout/{product}', [CheckoutController::class, 'show'])->name('checkout.show');
 Route::post('/checkout/{product}', [CheckoutController::class, 'process'])->name('checkout.process');
 Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+Route::get('/services/{service:slug}', [ServiceController::class, 'show'])->name('services.show');
+Route::post('/services/{service:slug}/rfq', [RfqController::class, 'store'])->name('rfq.store');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
