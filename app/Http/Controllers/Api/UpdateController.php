@@ -45,9 +45,10 @@ class UpdateController extends Controller
         $artifact = $release->fileArtifacts()->first();
 
         $url = URL::temporarySignedRoute(
-            'download',
+            'releases.download',
             now()->addMinutes(10),
-            ['release' => $release->id, 'license_key' => $license->license_key]
+            ['release' => $release->id, 'license_key' => $license->license_key],
+            false
         );
 
         return response()->json([
