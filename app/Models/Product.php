@@ -16,6 +16,11 @@ class Product extends Model
         return $this->hasMany(Version::class);
     }
 
+    public function releases()
+    {
+        return $this->hasMany(Release::class);
+    }
+
     public function licenses()
     {
         return $this->hasMany(License::class);

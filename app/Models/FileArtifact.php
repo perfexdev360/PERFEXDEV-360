@@ -8,15 +8,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class FileArtifact extends Model
 {
     protected $fillable = [
-        'version_id',
+        'release_id',
         'path',
         'size',
         'hash',
         'signature',
     ];
 
-    public function version(): BelongsTo
+    public function release(): BelongsTo
     {
-        return $this->belongsTo(Version::class);
+        return $this->belongsTo(Release::class);
     }
 }
