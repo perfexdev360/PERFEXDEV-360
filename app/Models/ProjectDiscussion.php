@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProjectActivity extends Model
+class ProjectDiscussion extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
     protected $casts = [
-        'data' => 'array',
+        'attachments' => 'array',
     ];
 
     public function project()

@@ -154,14 +154,25 @@ class FlowService
     /**
      * Record a reply to a ticket and reopen it if necessary.
      */
-    public function replyToTicket(Ticket $ticket, User $user, string $message): TicketReply
-    {
+    public function replyToTicket(
+        Ticket $ticket,
+        User $user,
+        string $body,
+        ?array $attachments = null,
+        bool $internal = false
+    ): TicketReply {
         $reply = $ticket->replies()->create([
             'user_id' => $user->id,
-            'message' => $message,
+            'body' => $body,
+            'attachments' => $attachments,
+            'is_internal' => $internal,
         ]);
 
-        $ticket->status = 'open';
+        if (! $internal) {
+            $ticket->status = 'open';
+        }
+
+        $ticket->last_activity_at = now();
         $ticket->save();
 
         return $reply;
@@ -173,7 +184,6 @@ class FlowService
     public function closeTicket(Ticket $ticket): void
     {
         $ticket->status = 'closed';
-        $ticket->closed_at = now();
         $ticket->save();
     }
 

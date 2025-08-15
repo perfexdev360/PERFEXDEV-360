@@ -20,4 +20,29 @@ class Project extends Model
     {
         return $this->hasMany(Ticket::class);
     }
+
+    public function milestones()
+    {
+        return $this->hasMany(Milestone::class);
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(ProjectFile::class);
+    }
+
+    public function discussions()
+    {
+        return $this->hasMany(ProjectDiscussion::class);
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(ProjectActivity::class);
+    }
 }
