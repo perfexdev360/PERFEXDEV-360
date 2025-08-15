@@ -58,6 +58,9 @@ class Quote extends Model
      */
     public function approve(string $name, string $ip): Invoice
     {
+        // Ensure totals are current before approval
+        $this->recalculateTotals();
+
         $this->status = 'approved';
         $meta = $this->meta ?? [];
         $meta['signature'] = [
