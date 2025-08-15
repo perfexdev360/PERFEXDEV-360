@@ -138,19 +138,32 @@
             <a href="{{ route('home') }}" class="font-black text-2xl hero-text tracking-tight">
                 {{ config('app.name', 'PerfexDev360') }}
             </a>
-            <div class="hidden md:flex space-x-8">
-                <a href="{{ route('products.index') }}" class="nav-link text-gray-700 hover:text-indigo-600 font-medium transition-colors">Products</a>
-                <a href="{{ route('services.index') }}" class="nav-link text-gray-700 hover:text-indigo-600 font-medium transition-colors">Services</a>
-                <a href="{{ route('blog.index') }}" class="nav-link text-gray-700 hover:text-indigo-600 font-medium transition-colors">Blog</a>
-                <a href="{{ route('contact.index') }}" class="nav-link text-gray-700 hover:text-indigo-600 font-medium transition-colors">Contact</a>
+            <div class="flex items-center space-x-6">
+                <div class="hidden md:flex space-x-8">
+                    <a href="{{ route('products.index') }}" class="nav-link text-gray-700 hover:text-indigo-600 font-medium transition-colors">Products</a>
+                    <a href="{{ route('services.index') }}" class="nav-link text-gray-700 hover:text-indigo-600 font-medium transition-colors">Services</a>
+                    <a href="{{ route('blog.index') }}" class="nav-link text-gray-700 hover:text-indigo-600 font-medium transition-colors">Blog</a>
+                    <a href="{{ route('contact.index') }}" class="nav-link text-gray-700 hover:text-indigo-600 font-medium transition-colors">Contact</a>
+                </div>
+                @if (Route::has('login'))
+                    <div class="flex items-center space-x-4">
+                        @auth
+                            <a href="{{ url('/dashboard') }}" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">Dashboard</a>
+                        @else
+                            <a href="{{ route('login') }}" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">Log in</a>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="bg-indigo-600 text-white px-5 py-2 rounded-md hover:bg-indigo-700 transition-colors">Register</a>
+                            @endif
+                        @endauth
+                    </div>
+                @endif
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
             </div>
-
-            <!-- Mobile Menu Button -->
-            <button class="md:hidden p-2">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
         </div>
     </nav>
 
