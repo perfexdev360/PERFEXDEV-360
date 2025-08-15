@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use App\Models\Setting;
 
@@ -20,5 +21,10 @@ class Meeting extends Model
                 $meeting->url = str_replace('{code}', $code, $template);
             }
         });
+    }
+
+    public function lead(): BelongsTo
+    {
+        return $this->belongsTo(Lead::class);
     }
 }

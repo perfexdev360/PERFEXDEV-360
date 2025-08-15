@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\CaseStudyController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\LeadController;
 
 Route::get('/', function () {
     return 'Admin Dashboard';
@@ -26,4 +27,7 @@ Route::resources([
     'team-members' => TeamMemberController::class,
     'media' => MediaController::class,
 ]);
+
+Route::get('leads', [LeadController::class, 'index'])->name('leads.index');
+Route::post('leads/{lead}/move', [LeadController::class, 'moveStage'])->name('leads.move');
 
