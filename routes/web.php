@@ -2,7 +2,11 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\ProductController;
+use App\Http\Controllers\Frontend\ServiceController;
+use App\Http\Controllers\Frontend\BlogController;
+use App\Http\Controllers\Frontend\ContactController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
@@ -15,9 +19,6 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit
 
 require __DIR__.'/auth.php';
