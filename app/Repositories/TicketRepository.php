@@ -6,10 +6,10 @@ use App\Models\Ticket;
 
 class TicketRepository extends BaseRepository
 {
-    protected array  = [];
+    protected array $with = [];
 
-    public function __construct(Ticket )
+    public function __construct(Ticket $model)
     {
-        parent::__construct();
+        parent::__construct($model);
     }
 }
