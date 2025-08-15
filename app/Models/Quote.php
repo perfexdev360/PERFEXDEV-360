@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\QuoteApproved;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Invoice;
@@ -10,25 +11,14 @@ use App\Models\User;
 
 class Quote extends Model
 {
+    use HasFactory;
+
     protected $guarded = [];
 
     public function lead()
     {
         return $this->belongsTo(Lead::class);
     }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    protected $fillable = [
-        'status',
-        'number',
-        'subtotal',
-        'discount_total',
-        'tax_total',
-        'grand_total',
-        'user_id',
-    ];
 
     /**
      * Quote belongs to a user (client).
