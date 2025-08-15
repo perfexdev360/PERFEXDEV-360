@@ -76,8 +76,9 @@
         <!-- Mobile Menu Overlay -->
         <div x-show="sidebarOpen" @click="toggleSidebar" x-cloak class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-300"></div>
 
-        <!-- Sidebar -->
-        <aside id="sidebar" :class="{'-translate-x-full': !sidebarOpen}" class="fixed left-0 top-0 z-50 h-full w-72 bg-white dark:bg-gray-800 shadow-2xl sidebar-transition transform lg:translate-x-0 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed left-0 top-0 z-50 h-full w-72 bg-white dark:bg-gray-800 shadow-2xl sidebar-transition transform -translate-x-full lg:translate-x-0 border-r border-gray-200 dark:border-gray-700 flex flex-col animate-slide-in">
+
         <!-- Logo Section -->
         <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
             <div class="flex items-center space-x-3">
@@ -335,7 +336,7 @@
         </header>
 
         <!-- Page Content -->
-        <main class="p-6">
+        <main class="p-6 animate-fade-in">
             {{ $slot }}
         </main>
     </div>
