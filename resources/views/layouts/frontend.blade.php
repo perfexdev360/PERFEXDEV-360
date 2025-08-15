@@ -134,7 +134,7 @@
     <div class="blob-2"></div>
 
     <!-- Navigation -->
-    <nav class="relative z-50 glass-effect">
+    <nav class="relative z-50 glass-effect animate-slide-in">
         <div class="container mx-auto px-6 py-6 flex justify-between items-center">
             <a href="{{ route('home') }}" class="font-black text-2xl hero-text tracking-tight">
                 {{ config('app.name', 'PerfexDev360') }}
@@ -169,7 +169,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="relative z-10">
+    <main class="relative z-10 animate-fade-in">
         @if(session('status'))
             <div class="container mx-auto px-6 mb-8">
                 <div class="p-6 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-r-lg shadow-sm">
