@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Project;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -669,7 +670,7 @@ return new class extends Migration {
         });
 
         Schema::table('tickets', function (Blueprint $table) {
-            $table->foreignId('project_id')
+            $table->foreignIdFor(Project::class)
                 ->nullable()
                 ->constrained()
                 ->nullOnDelete()

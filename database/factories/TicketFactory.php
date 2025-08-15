@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Project;
 use App\Models\Ticket;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -15,6 +16,7 @@ class TicketFactory extends Factory
     public function definition(): array
     {
         return [
+            'project_id' => Project::factory(),
             'subject' => $this->faker->sentence(),
             'category' => $this->faker->word(),
             'priority' => $this->faker->randomElement(['low','normal','high','urgent']),
