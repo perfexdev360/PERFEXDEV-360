@@ -668,6 +668,14 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+        Schema::table('tickets', function (Blueprint $table) {
+            $table->foreignId('project_id')
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete()
+                ->after('user_id');
+        });
+
         Schema::create('milestones', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
@@ -744,9 +752,9 @@ return new class extends Migration {
         Schema::dropIfExists('project_files');
         Schema::dropIfExists('tasks');
         Schema::dropIfExists('milestones');
-        Schema::dropIfExists('projects');
         Schema::dropIfExists('ticket_replies');
         Schema::dropIfExists('tickets');
+        Schema::dropIfExists('projects');
 
         Schema::dropIfExists('service_requests');
         Schema::dropIfExists('service_case_study');
