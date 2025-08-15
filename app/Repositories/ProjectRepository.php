@@ -6,10 +6,10 @@ use App\Models\Project;
 
 class ProjectRepository extends BaseRepository
 {
-    protected array  = [];
+    protected array $with = [];
 
-    public function __construct(Project )
+    public function __construct(Project $model)
     {
-        parent::__construct();
+        parent::__construct($model);
     }
 }
