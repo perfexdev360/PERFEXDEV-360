@@ -47,7 +47,8 @@ class UpdateController extends Controller
         $url = URL::temporarySignedRoute(
             'releases.download',
             now()->addMinutes(10),
-            ['release' => $release->id, 'license_key' => $license->license_key]
+            ['release' => $release->id, 'license_key' => $license->license_key],
+            false
         );
 
         return response()->json([

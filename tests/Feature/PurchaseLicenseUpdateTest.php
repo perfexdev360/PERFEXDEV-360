@@ -34,5 +34,8 @@ it('issues license on purchase and serves update download', function () {
     $response->assertOk()->assertJson(['version' => '1.0.0', 'checksum' => 'abc123']);
 
     $downloadUrl = $response->json('download_url');
+    expect($downloadUrl)->toStartWith('/api/download/');
+    expect($downloadUrl)->not->toContain('public');
+
     actingAs($user)->get($downloadUrl)->assertRedirect('https://files.test/build.zip');
 });
