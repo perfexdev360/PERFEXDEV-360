@@ -13,9 +13,8 @@ class ServiceMatcher
      */
     public function suggestForLead(Lead $lead): Collection
     {
-        $leadTags = collect(explode(',', (string) $lead->tech_stack))
-            ->map(fn ($tag) => trim(strtolower($tag)))
-            ->filter();
+        $lead->loadMissing('serviceRequests');
+        $leadTags = $lead->tags();
 
         return Service::with('options')
             ->get()

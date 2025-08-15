@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 class Lead extends Model
 {
@@ -24,6 +26,23 @@ class Lead extends Model
     public function quotes()
     {
         return $this->hasMany(Quote::class);
+    }
+
+    public function serviceRequests(): HasMany
+    {
+        return $this->hasMany(ServiceRequest::class);
+    }
+
+    public function tags(): Collection
+    {
+        $tags = collect(explode(',', (string) $this->tech_stack))
+            ->map(fn ($tag) => trim(strtolower($tag)))
+            ->filter();
+
+        $optionTags = $this->serviceRequests
+            ->flatMap(fn ($request) => array_keys($request->selected_options ?? []));
+
+        return $tags->merge($optionTags)->unique();
     }
  
     protected $fillable = [
