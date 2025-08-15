@@ -71,13 +71,14 @@
             background: rgba(156, 163, 175, 0.8);
         }
     </style>
-</head>
-<body class="font-sans antialiased bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-    <!-- Mobile Menu Overlay -->
-    <div id="mobile-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden transition-opacity duration-300"></div>
+    </head>
+    <body x-data="layout" class="font-sans antialiased bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <!-- Mobile Menu Overlay -->
+        <div x-show="sidebarOpen" @click="toggleSidebar" x-cloak class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-300"></div>
 
     <!-- Sidebar -->
     <aside id="sidebar" class="fixed left-0 top-0 z-50 h-full w-72 bg-white dark:bg-gray-800 shadow-2xl sidebar-transition transform -translate-x-full lg:translate-x-0 border-r border-gray-200 dark:border-gray-700 flex flex-col animate-slide-in">
+
         <!-- Logo Section -->
         <div class="flex items-center justify-between px-6 py-5 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
             <div class="flex items-center space-x-3">
@@ -89,7 +90,7 @@
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Management Dashboard</p>
                 </div>
             </div>
-            <button id="close-sidebar" class="lg:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+            <button id="close-sidebar" @click="toggleSidebar" class="lg:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                 <i class="fas fa-times text-lg"></i>
             </button>
         </div>
@@ -257,7 +258,7 @@
         <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-30">
             <div class="flex items-center justify-between px-6 py-4">
                 <!-- Mobile Menu Button -->
-                <button id="mobile-menu-button" class="lg:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                <button id="mobile-menu-button" @click="toggleSidebar" class="lg:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
 
@@ -280,7 +281,7 @@
                     </button>
 
                     <!-- Dark Mode Toggle -->
-                    <button id="theme-toggle" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                    <button id="theme-toggle" @click="toggleDarkMode" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                         <i class="fas fa-moon dark:hidden"></i>
                         <i class="fas fa-sun hidden dark:block"></i>
                     </button>
@@ -294,8 +295,8 @@
                     </div>
 
                     <!-- User Menu Dropdown -->
-                    <div class="relative">
-                        <button id="user-menu-button" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                    <div class="relative" @click.away="userMenuOpen = false">
+                        <button id="user-menu-button" @click="toggleUserMenu" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                             <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
                                 <i class="fas fa-user text-white text-sm"></i>
                             </div>
@@ -303,11 +304,11 @@
                                 <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ Auth::user()->name ?? 'John Doe' }}</p>
                                 <p class="text-xs text-gray-500 dark:text-gray-400">Online</p>
                             </div>
-                            <i class="fas fa-chevron-down text-sm text-gray-500 dark:text-gray-400 transition-transform duration-200" id="user-menu-arrow"></i>
+                            <i class="fas fa-chevron-down text-sm text-gray-500 dark:text-gray-400 transition-transform duration-200" :class="{'rotate-180': userMenuOpen}"></i>
                         </button>
 
                         <!-- Dropdown Menu -->
-                        <div id="user-dropdown" class="dropdown-menu absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2">
+                        <div x-show="userMenuOpen" x-transition x-cloak class="dropdown-menu absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2">
                             <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                 <p class="text-sm font-medium text-gray-900 dark:text-white">{{ Auth::user()->name ?? 'John Doe' }}</p>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ Auth::user()->email ?? 'user@example.com' }}</p>
@@ -340,63 +341,5 @@
         </main>
     </div>
 
-    <script>
-        // Mobile Menu Toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const sidebar = document.getElementById('sidebar');
-        const mobileOverlay = document.getElementById('mobile-overlay');
-        const closeSidebar = document.getElementById('close-sidebar');
-
-        function toggleSidebar() {
-            sidebar.classList.toggle('-translate-x-full');
-            mobileOverlay.classList.toggle('hidden');
-        }
-
-        mobileMenuButton.addEventListener('click', toggleSidebar);
-        closeSidebar.addEventListener('click', toggleSidebar);
-        mobileOverlay.addEventListener('click', toggleSidebar);
-
-        // Dark Mode Toggle
-        const themeToggle = document.getElementById('theme-toggle');
-        const htmlElement = document.documentElement;
-
-        themeToggle.addEventListener('click', () => {
-            htmlElement.classList.toggle('dark');
-            localStorage.setItem('theme', htmlElement.classList.contains('dark') ? 'dark' : 'light');
-        });
-
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            htmlElement.classList.add('dark');
-        }
-
-        // User Dropdown Menu
-        const userMenuButton = document.getElementById('user-menu-button');
-        const userDropdown = document.getElementById('user-dropdown');
-        const userMenuArrow = document.getElementById('user-menu-arrow');
-
-        userMenuButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            userDropdown.classList.toggle('active');
-            userMenuArrow.classList.toggle('rotate-180');
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
-                userDropdown.classList.remove('active');
-                userMenuArrow.classList.remove('rotate-180');
-            }
-        });
-
-        // Close mobile menu on window resize
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 1024) {
-                sidebar.classList.remove('-translate-x-full');
-                mobileOverlay.classList.add('hidden');
-            }
-        });
-    </script>
-</body>
-</html>
+    </body>
+    </html>
