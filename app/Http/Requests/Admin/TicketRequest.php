@@ -13,6 +13,13 @@ class TicketRequest extends FormRequest
 
     public function rules(): array
     {
-        return [];
+        return [
+            'subject' => ['required', 'string', 'max:255'],
+            'category' => ['nullable', 'string', 'max:255'],
+            'priority' => ['required', 'in:low,normal,high,urgent'],
+            'status' => ['required', 'in:open,pending,resolved,closed'],
+            'user_id' => ['nullable', 'exists:users,id'],
+            'project_id' => ['nullable', 'exists:projects,id'],
+        ];
     }
 }

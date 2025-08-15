@@ -26,7 +26,11 @@ class ProjectController extends Controller
 
     public function store(ProjectRequest $request)
     {
-        $project = $this->repository->create($request->validated());
+        $data = $request->validated();
+        $data['user_id'] = $data['user_id'] ?? $request->user()->id;
+
+        $project = $this->repository->create($data);
+
         return response()->json($project, 201);
     }
 
@@ -42,7 +46,11 @@ class ProjectController extends Controller
 
     public function update(ProjectRequest $request, Project $project)
     {
-        $project = $this->repository->update($project, $request->validated());
+        $data = $request->validated();
+        $data['user_id'] = $data['user_id'] ?? $project->user_id;
+
+        $project = $this->repository->update($project, $data);
+
         return response()->json($project);
     }
 
