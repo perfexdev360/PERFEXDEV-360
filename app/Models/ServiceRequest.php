@@ -15,6 +15,13 @@ class ServiceRequest extends Model
     protected $guarded = [];
 
     /**
+     * Attribute casting.
+     */
+    protected $casts = [
+        'selected_options' => 'array',
+    ];
+
+    /**
      * Service related to the request.
      */
     public function service(): BelongsTo
