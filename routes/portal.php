@@ -7,6 +7,7 @@ use App\Http\Controllers\Portal\QuoteController;
 use App\Http\Controllers\Portal\InvoiceController;
 use App\Http\Controllers\Portal\ProjectController;
 use App\Http\Controllers\Portal\TicketController;
+use App\Http\Controllers\Portal\OrderReviewController;
 
 Route::middleware(['auth', 'verified', 'twofactor'])->group(function () {
     Route::get('/', function () {
@@ -29,6 +30,10 @@ Route::middleware(['auth', 'verified', 'twofactor'])->group(function () {
         ->name('invoices.receipt');
 
     Route::resource('purchases', PurchaseController::class)->only(['index', 'show']);
+    Route::post('purchases/{order}/review', [OrderReviewController::class, 'store'])
+        ->name('purchases.review.store');
+    Route::put('purchases/{order}/review', [OrderReviewController::class, 'update'])
+        ->name('purchases.review.update');
     Route::resource('licenses', LicenseController::class)->only(['index', 'show']);
     Route::post('licenses/{license}/rotate', [LicenseController::class, 'rotate'])
         ->name('licenses.rotate');

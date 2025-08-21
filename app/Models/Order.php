@@ -12,6 +12,7 @@ use App\Models\License;
 use App\Models\Invoice;
 use App\Models\OrderItem;
 use App\Models\TaxLine;
+use App\Models\OrderReview;
 
 class Order extends Model
 {
@@ -65,5 +66,15 @@ class Order extends Model
     public function license(): HasOne
     {
         return $this->hasOne(License::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(OrderReview::class);
+    }
+
+    public function getAverageRatingAttribute(): ?float
+    {
+        return $this->reviews()->avg('rating');
     }
 }
