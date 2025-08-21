@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\User;
 use App\Models\License;
 use App\Models\Invoice;
+use App\Models\OrderItem;
+use App\Models\TaxLine;
 
 class Order extends Model
 {
@@ -45,6 +47,16 @@ class Order extends Model
     public function invoices(): HasMany
     {
         return $this->hasMany(Invoice::class);
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function taxLines(): HasMany
+    {
+        return $this->hasMany(TaxLine::class);
     }
 
     /**
