@@ -19,8 +19,6 @@ Route::middleware(['auth', 'verified', 'twofactor'])->group(function () {
     Route::post('quotes/{quote}/reject', [QuoteController::class, 'reject'])
         ->name('quotes.reject');
 
-    Route::resource('quotes', QuoteController::class)->only(['index', 'show']);
-
     Route::resource('projects', ProjectController::class);
     Route::resource('tickets', TicketController::class);
 
@@ -37,8 +35,5 @@ Route::middleware(['auth', 'verified', 'twofactor'])->group(function () {
     Route::get('licenses/{license}/download/{release}', [LicenseController::class, 'download'])
         ->name('licenses.download')
         ->middleware('signed');
-
-    Route::resource('projects', ProjectController::class);
-    Route::resource('tickets', TicketController::class);
 });
 
