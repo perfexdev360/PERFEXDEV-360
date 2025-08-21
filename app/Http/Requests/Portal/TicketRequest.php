@@ -18,6 +18,8 @@ class TicketRequest extends FormRequest
             'category' => ['nullable', 'string', 'max:255'],
             'priority' => ['required', 'in:low,normal,high,urgent'],
             'status' => ['sometimes', 'in:open,pending,resolved,closed'],
+            'body' => ['required', 'string'],
+            'order_id' => ['nullable', 'exists:orders,id'],
         ];
     }
 }
