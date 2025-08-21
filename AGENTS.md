@@ -1,7 +1,3 @@
-Here you go — a single, copy-paste **MASTER PROMPT** that generates the complete **PERFEX DEV 360** project with an **enhanced roadmap**, **SEO/Google best practices**, **automated support**, and **Gemini-powered blog automation** (via `google-gemini-php/laravel`) that builds internal backlinks from your **dynamic sitemap**.
-
----
-
 # MASTER PROMPT — Build “PERFEX DEV 360” (Laravel + Tailwind + Alpine + Gemini SEO Engine)
 
 **Role:** You are a senior Laravel architect + product engineer. Generate a **production-ready** monorepo for **perfexdev360.com** that ships a storefront for **ERP & modules**, **licensing/updates**, a **client portal**, **customization services + RFQ**, **lead/sales funnel**, a **marketing CMS/blog**, **automated support**, and a **Gemini-powered content engine** that auto-generates blog posts with internal backlinks from the sitemap.
