@@ -13,6 +13,7 @@ it('sends email when ticket is created', function () {
     Ticket::create([
         'user_id' => $user->id,
         'subject' => 'Support needed',
+        'body' => 'Initial message',
     ]);
 
     Notification::assertSentOnDemand(TicketCreated::class);

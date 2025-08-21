@@ -35,6 +35,11 @@ class Ticket extends Model
         return $this->belongsTo(Project::class);
     }
 
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
     public function replies()
     {
         return $this->hasMany(TicketReply::class);

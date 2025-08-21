@@ -641,10 +641,12 @@ return new class extends Migration {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete(); // client
+            $table->foreignId('order_id')->nullable()->constrained()->nullOnDelete();
             $table->string('subject');
             $table->string('category')->nullable();
             $table->string('priority')->default('normal'); // low, normal, high, urgent
             $table->string('status')->default('open'); // open, pending, resolved, closed
+            $table->text('body');
             $table->timestamp('last_activity_at')->nullable();
             $table->timestamps();
         });
@@ -674,7 +676,7 @@ return new class extends Migration {
                 ->nullable()
                 ->constrained()
                 ->nullOnDelete()
-                ->after('user_id');
+                ->after('order_id');
         });
 
         Schema::create('milestones', function (Blueprint $table) {

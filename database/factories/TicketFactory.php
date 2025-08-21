@@ -19,11 +19,12 @@ class TicketFactory extends Factory
         return [
             'user_id' => User::factory(),
             'project_id' => Project::factory(),
+            'order_id' => null,
             'subject' => $this->faker->sentence(),
             'category' => $this->faker->word(),
             'priority' => $this->faker->randomElement(['low','normal','high','urgent']),
             'status' => $this->faker->randomElement(['open','pending','resolved','closed']),
-            'project_id' => Project::factory(),
+            'body' => $this->faker->paragraph(),
             'last_activity_at' => now(),
         ];
     }
