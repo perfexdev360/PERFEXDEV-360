@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{BlogPost, Invoice, Lead, License, Order, Page, PipelineStage, Product, Project, Quote, ReleaseChannel, Ticket, User, Version, Setting};
+use App\Models\{BlogPost, Invoice, Lead, License, Order, OrderReview, Page, PipelineStage, Product, Project, Quote, ReleaseChannel, Ticket, User, Version, Setting};
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -54,7 +54,10 @@ class DatabaseSeeder extends Seeder
             ->count(5)
             ->for($users->random())
             ->has(Invoice::factory())
-            ->create();
+            ->create()
+            ->each(function ($order) {
+                OrderReview::factory()->for($order)->for($order->user)->create();
+            });
 
         Project::factory()
             ->count(3)
