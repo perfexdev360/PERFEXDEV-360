@@ -33,10 +33,16 @@ class FlowService
     public function purchaseProduct(User $user, Product $product): License
     {
         return DB::transaction(function () use ($user, $product) {
+            $price = $product->price ?? 0;
+
             $order = Order::create([
                 'user_id' => $user->id,
                 'status' => 'paid',
-                'total' => $product->price ?? 0,
+                'number' => (string) Str::uuid(),
+                'subtotal' => $price,
+                'tax_total' => 0,
+                'discount_total' => 0,
+                'grand_total' => $price,
             ]);
 
             return License::create([
