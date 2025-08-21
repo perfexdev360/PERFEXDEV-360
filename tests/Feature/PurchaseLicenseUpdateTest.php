@@ -16,6 +16,14 @@ it('issues license on purchase and serves update download', function () {
 
     $license = app(FlowService::class)->purchaseProduct($user, $product);
 
+    $order = $license->order;
+    $expectedPrice = $product->price ?? 0.0;
+    expect($order->number)->not->toBeEmpty();
+    expect($order->subtotal)->toBe($expectedPrice);
+    expect($order->tax_total)->toBe(0.0);
+    expect($order->discount_total)->toBe(0.0);
+    expect($order->grand_total)->toBe($expectedPrice);
+
     $invoice = Invoice::factory()->create(['order_id' => $license->order_id]);
     expect($invoice->order_id)->toBe($license->order_id);
 

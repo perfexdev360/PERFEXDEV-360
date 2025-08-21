@@ -17,8 +17,17 @@ class Order extends Model
 
     protected $guarded = [];
 
+    /**
+     * @var array<int, string>
+     */
     protected $fillable = [
         'user_id',
+        'status',
+        'number',
+        'subtotal',
+        'tax_total',
+        'discount_total',
+        'grand_total',
     ];
 
     protected $casts = [
