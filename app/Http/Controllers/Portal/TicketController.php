@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Portal\TicketRequest;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TicketController extends Controller
 {
@@ -14,7 +15,7 @@ class TicketController extends Controller
      */
     public function index(Request $request)
     {
-        $tickets = $request->user()->tickets()->latest()->get();
+        $tickets = $request->user()->tickets()->with('order')->latest()->get();
 
         if ($request->wantsJson()) {
             return response()->json($tickets);
@@ -28,11 +29,13 @@ class TicketController extends Controller
      */
     public function create(Request $request)
     {
+        $orders = $request->user()->orders()->latest()->get();
+
         if ($request->wantsJson()) {
-            return response()->json([]);
+            return response()->json(['orders' => $orders]);
         }
 
-        return view('portal.tickets.create');
+        return view('portal.tickets.create', compact('orders'));
     }
 
     /**
@@ -40,13 +43,23 @@ class TicketController extends Controller
      */
     public function store(TicketRequest $request)
     {
-        $ticket = $request->user()->tickets()->create($request->validated());
+        $data = $request->validated();
+        $ticket = null;
+
+        DB::transaction(function () use ($request, $data, &$ticket) {
+            $ticket = $request->user()->tickets()->create($data);
+
+            $ticket->replies()->create([
+                'user_id' => $request->user()->id,
+                'body' => $data['body'],
+            ]);
+        });
 
         if ($request->wantsJson()) {
             return response()->json($ticket, 201);
         }
 
-        return redirect()->route('tickets.show', $ticket)
+        return redirect()->route('portal.tickets.show', $ticket)
             ->with('status', 'Ticket created.');
     }
 
@@ -57,7 +70,7 @@ class TicketController extends Controller
     {
         abort_if($ticket->user_id !== $request->user()->id, 403);
 
-        $ticket->load('replies');
+        $ticket->load('replies', 'order');
 
         if ($request->wantsJson()) {
             return response()->json($ticket);
@@ -73,11 +86,13 @@ class TicketController extends Controller
     {
         abort_if($ticket->user_id !== $request->user()->id, 403);
 
+        $orders = $request->user()->orders()->latest()->get();
+
         if ($request->wantsJson()) {
-            return response()->json($ticket);
+            return response()->json(['ticket' => $ticket, 'orders' => $orders]);
         }
 
-        return view('portal.tickets.edit', compact('ticket'));
+        return view('portal.tickets.edit', compact('ticket', 'orders'));
     }
 
     /**
