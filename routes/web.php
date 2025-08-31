@@ -9,6 +9,7 @@ use App\Http\Controllers\Frontend\RfqController;
 use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\Frontend\CheckoutController;
+use App\Http\Controllers\InstallController;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
 use Spatie\Sitemap\Tags\Sitemap as SitemapTag;
@@ -26,6 +27,9 @@ use App\Http\Controllers\Admin\CaseStudyController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\MediaController;
+
+Route::get('/install', [InstallController::class, 'show'])->name('install.show');
+Route::post('/install', [InstallController::class, 'store'])->name('install.store');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
