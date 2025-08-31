@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->prepend(App\Http\Middleware\RedirectIfNotInstalled::class);
         $middleware->append(App\Http\Middleware\CanonicalRedirect::class);
         $middleware->alias([
             'twofactor' => App\Http\Middleware\EnsureTwoFactorEnabled::class,
@@ -30,4 +31,3 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
-

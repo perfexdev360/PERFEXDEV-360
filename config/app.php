@@ -105,6 +105,8 @@ return [
         ),
     ],
 
+    'installed' => (bool) env('APP_INSTALLED', false),
+
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver

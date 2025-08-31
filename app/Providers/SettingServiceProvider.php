@@ -16,6 +16,10 @@ class SettingServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if (! config('app.installed')) {
+            return;
+        }
+
         if (Schema::hasTable('settings')) {
             $settings = Setting::pluck('value', 'key')->toArray();
             $config = [];
