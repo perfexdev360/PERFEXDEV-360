@@ -19,6 +19,12 @@ class RedirectIfNotInstalled
             && ! $request->is('build/*')
             && ! $request->is('storage/*')
         ) {
+            if (! \file_exists(base_path('.env'))) {
+                $installUrl = $request->getSchemeAndHttpHost().$request->getBaseUrl().'/install';
+
+                return redirect()->to($installUrl);
+            }
+
             return redirect()->route('install.show');
         }
 
